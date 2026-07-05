@@ -1,7 +1,7 @@
 <?php
 if (!defined('ABSPATH')) { exit; }
 
-define('PETTT_PRO_VERSION', '1.0.2');
+define('PETTT_PRO_VERSION', '1.1.0');
 
 require_once get_template_directory() . '/inc/seo.php';
 require_once get_template_directory() . '/inc/account.php';
@@ -9,6 +9,9 @@ require_once get_template_directory() . '/inc/admin.php';
 require_once get_template_directory() . '/inc/theme-settings.php';
 require_once get_template_directory() . '/inc/demo-data.php';
 require_once get_template_directory() . '/inc/recommendations.php';
+require_once get_template_directory() . '/inc/performance.php';
+require_once get_template_directory() . '/inc/explore.php';
+require_once get_template_directory() . '/inc/woocommerce-ux.php';
 
 function pettt_meta($id, $key, $default='') { $v = get_post_meta($id, $key, true); return $v ? $v : $default; }
 function pettt_query($type, $count=6) { return new WP_Query(['post_type'=>$type, 'posts_per_page'=>$count, 'post_status'=>'publish']); }
@@ -79,7 +82,7 @@ add_action('customize_register', function($wp_customize){
 
 add_action('pre_get_posts', function($query){
     if (is_admin() || !$query->is_main_query()) return;
-    if ($query->is_search()) $query->set('post_type', ['post','product','pettt_brand','pettt_food','pettt_video','pettt_service']);
+    if ($query->is_search()) $query->set('post_type', ['post','product','pettt_brand','pettt_food','pettt_video','pettt_service','pettt_explore']);
     if (is_post_type_archive('pettt_service')) {
         $meta_query = [];
         if (!empty($_GET['province'])) $meta_query[] = ['key'=>'_pettt_province','value'=>sanitize_text_field($_GET['province']),'compare'=>'LIKE'];
