@@ -3,6 +3,8 @@ if (!defined('ABSPATH')) { exit; }
 
 define('PETTT_PRO_VERSION', '1.0.0');
 
+require_once get_template_directory() . '/inc/seo.php';
+
 action_scheduler_init_placeholder();
 function action_scheduler_init_placeholder() {}
 
@@ -16,6 +18,7 @@ add_action('after_setup_theme', function () {
     add_theme_support('wc-product-gallery-zoom');
     add_theme_support('wc-product-gallery-lightbox');
     add_theme_support('wc-product-gallery-slider');
+    add_theme_support('elementor');
     register_nav_menus([
         'primary' => 'منوی اصلی',
         'footer'  => 'منوی فوتر',
@@ -40,6 +43,7 @@ add_action('init', function () {
         'show_admin_column' => true,
         'hierarchical' => true,
         'rewrite' => ['slug' => 'service-type'],
+        'show_in_rest' => true,
     ]);
     register_taxonomy('pettt_food_problem', ['pettt_food'], [
         'label' => 'مشکل یا نیاز پت',
@@ -47,6 +51,7 @@ add_action('init', function () {
         'show_admin_column' => true,
         'hierarchical' => true,
         'rewrite' => ['slug' => 'food-problem'],
+        'show_in_rest' => true,
     ]);
 });
 
@@ -132,3 +137,8 @@ add_action('customize_register', function($wp_customize){
 });
 
 add_action('woocommerce_before_shop_loop_item_title', function(){ echo '<div class="pettt-product-badge">Pettt Shop</div>'; }, 5);
+
+add_filter('body_class', function($classes){
+    if (class_exists('WooCommerce') && (is_shop() || is_product_taxonomy() || is_product())) $classes[] = 'pettt-woocommerce-page';
+    return $classes;
+});
