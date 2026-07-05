@@ -59,9 +59,9 @@ function pettt_seed_demo_data() {
     }
 
     $services = [
-        ['پت شاپ مرکزی','پت‌شاپ','تهران','تهران','تهران، سعادت آباد','021-11111111'],
-        ['کلینیک دامپزشکی مهر','دامپزشکی','تهران','تهران','تهران، ونک','021-22222222'],
-        ['آرایشگاه پت پامرانین','آرایشگر','تهران','تهران','تهران، جردن','021-33333333'],
+        ['پت شاپ مرکزی','پت‌شاپ','تهران','تهران','تهران، سعادت آباد','021-11111111','@pettt_shop','شنبه تا پنجشنبه ۱۰ تا ۲۲'],
+        ['کلینیک دامپزشکی مهر','دامپزشکی','تهران','تهران','تهران، ونک','021-22222222','@mehr_vet','هر روز ۹ تا ۲۳'],
+        ['آرایشگاه پت پامرانین','آرایشگر','تهران','تهران','تهران، جردن','021-33333333','@pet_grooming','با تعیین وقت قبلی'],
     ];
     foreach ($services as $s) {
         $id = wp_insert_post(['post_type'=>'pettt_service','post_status'=>'publish','post_title'=>$s[0],'post_content'=>'توضیحات خدمت، ساعت کاری و شرایط مراجعه.']);
@@ -70,6 +70,11 @@ function pettt_seed_demo_data() {
         update_post_meta($id, '_pettt_city', $s[3]);
         update_post_meta($id, '_pettt_address', $s[4]);
         update_post_meta($id, '_pettt_phone', $s[5]);
+        update_post_meta($id, '_pettt_instagram', $s[6]);
+        update_post_meta($id, '_pettt_working_hours', $s[7]);
+        update_post_meta($id, '_pettt_website', 'https://example.com');
+        update_post_meta($id, '_pettt_video_embed', '[pettt_aparat_demo]');
+        update_post_meta($id, '_pettt_google_map_embed', '<iframe src="https://www.google.com/maps?q=Tehran&output=embed" width="100%" height="420" style="border:0;" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>');
     }
 
     wp_insert_post(['post_type'=>'post','post_status'=>'publish','post_title'=>'چطور غذای مناسب پت دارای مشکل گوارشی انتخاب کنیم؟','post_content'=>'برای پت‌هایی که معده حساس دارند، تغییر غذا باید آهسته انجام شود و بهتر است از رژیم‌های با هضم آسان استفاده شود.']);
