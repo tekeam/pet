@@ -6,7 +6,7 @@ get_header();
   <div class="pettt-container">
     <span class="pettt-kicker">Pet Profile</span>
     <h1>حساب کاربری و پروفایل پت</h1>
-    <p>اطلاعات حیوان خانگی، بیماری‌ها، غذای محبوب و یادآورهای دامپزشکی و خرید غذا را مدیریت کنید.</p>
+    <p>اطلاعات حیوان خانگی، بیماری‌ها، غذای محبوب، یادآورها و پیشنهادهای خرید را مدیریت کنید.</p>
   </div>
 </section>
 
@@ -25,6 +25,7 @@ get_header();
         <h3><?php echo esc_html(wp_get_current_user()->display_name); ?></h3>
         <p><?php echo esc_html(wp_get_current_user()->user_email); ?></p>
       </div>
+      <?php echo do_shortcode('[pettt_account_link]'); ?>
       <a href="<?php echo esc_url(wp_logout_url(home_url('/'))); ?>">خروج از حساب</a>
     </aside>
 
@@ -38,7 +39,7 @@ get_header();
           <label>نژاد<input name="pet_breed" placeholder="مثلاً گلدن رتریور"></label>
           <label>وزن<input name="pet_weight" placeholder="مثلاً ۲۵ کیلو"></label>
           <label>غذای محبوب<input name="pet_food" placeholder="مثلاً Royal Canin Gastrointestinal"></label>
-          <label>بیماری یا حساسیت<input name="pet_disease" placeholder="مثلاً مشکل گوارشی"></label>
+          <label>بیماری یا حساسیت<input name="pet_disease" placeholder="مثلاً گوارشی، حساسیت پوستی"></label>
           <label>لینک عکس پت<input name="pet_photo" placeholder="آدرس تصویر آپلودشده"></label>
           <button class="pettt-primary" name="pettt_save_pet" value="1">ذخیره پت</button>
         </form>
@@ -62,6 +63,8 @@ get_header();
           <?php endif; ?>
         </div>
       </div>
+
+      <?php if($pets): echo pettt_render_recommendations_for_pet($pets[0]); endif; ?>
 
       <div class="pettt-account-card">
         <h2>تقویم یادآور ایرانی</h2>
