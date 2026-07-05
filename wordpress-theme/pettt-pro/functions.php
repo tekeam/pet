@@ -1,7 +1,7 @@
 <?php
 if (!defined('ABSPATH')) { exit; }
 
-define('PETTT_PRO_VERSION', '1.1.0');
+define('PETTT_PRO_VERSION', '1.1.1');
 
 require_once get_template_directory() . '/inc/seo.php';
 require_once get_template_directory() . '/inc/account.php';
@@ -12,6 +12,7 @@ require_once get_template_directory() . '/inc/recommendations.php';
 require_once get_template_directory() . '/inc/performance.php';
 require_once get_template_directory() . '/inc/explore.php';
 require_once get_template_directory() . '/inc/woocommerce-ux.php';
+require_once get_template_directory() . '/inc/service-details.php';
 
 function pettt_meta($id, $key, $default='') { $v = get_post_meta($id, $key, true); return $v ? $v : $default; }
 function pettt_query($type, $count=6) { return new WP_Query(['post_type'=>$type, 'posts_per_page'=>$count, 'post_status'=>'publish']); }
