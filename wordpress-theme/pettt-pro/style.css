@@ -3,7 +3,7 @@ Theme Name: Pettt Pro
 Theme URI: https://pettt.local
 Author: Pettt Team
 Description: قالب حرفه‌ای وردپرس برای پلتفرم حیوانات خانگی، برندهای غذا، فروشگاه، مقالات، ویدیوها، پت‌شاپ‌ها و دامپزشکی‌ها. سازگار با WooCommerce، Elementor، ACF و افزونه‌های پیامک وردپرس.
-Version: 1.0.2
+Version: 1.1.0
 Requires at least: 6.0
 Tested up to: 6.6
 Requires PHP: 8.0
@@ -13,3 +13,4 @@ Tags: rtl, woocommerce, elementor, pets, directory, marketplace
 
 @import url('assets/css/theme.css');
 @import url('assets/css/account-admin.css');
+@import url('assets/css/pro-ui.css');
