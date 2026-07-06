@@ -9,9 +9,7 @@ function ninjapet_brand_name_fa(){ return pettt_setting('brand_name_fa', 'نین
 add_action('wp_head', function(){
     $font_url = esc_url(pettt_setting('custom_font_url', ''));
     $font_family = sanitize_text_field(pettt_setting('custom_font_family', 'NinjaPetFont'));
-    if ($font_url) {
-        echo '<style id="ninjapet-custom-font">@font-face{font-family:"'.esc_attr($font_family).'";src:url("'.$font_url.'") format("woff2");font-display:swap}:root{--np-font:"'.esc_attr($font_family).'", Vazirmatn, sans-serif}body,button,input,select,textarea{font-family:var(--np-font)}</style>';
-    }
+    if ($font_url) echo '<style id="ninjapet-custom-font">@font-face{font-family:"'.esc_attr($font_family).'";src:url("'.$font_url.'") format("woff2");font-display:swap}:root{--np-font:"'.esc_attr($font_family).'", Vazirmatn, sans-serif}body,button,input,select,textarea{font-family:var(--np-font)}</style>';
     $accent = esc_attr(pettt_setting('accent_color', '#5B45F5'));
     $dark = esc_attr(pettt_setting('dark_color', '#080A12'));
     echo '<style id="ninjapet-theme-vars">:root{--np-black:'.$dark.';--np-purple:'.$accent.';--np-soft:#EEEAFE;--np-pink:#F8B8C8;--np-mint:#A7D7C5;--np-bg:#FBFAFF;--np-text:#252733}</style>';
@@ -19,13 +17,13 @@ add_action('wp_head', function(){
 
 function ninjapet_logo_html($class='ninjapet-logo'){
     if (has_custom_logo()) return get_custom_logo();
-    return '<a class="'.esc_attr($class).'" href="'.esc_url(home_url('/')).'"><span class="np-logo-cat">🐱‍👤</span><strong>Ninja<span>Pet</span></strong></a>';
+    $src = get_template_directory_uri() . '/assets/img/ninjapet-logo.svg';
+    return '<a class="'.esc_attr($class).'" href="'.esc_url(home_url('/')).'"><img src="'.esc_url($src).'" alt="NinjaPet" loading="eager"></a>';
 }
 
 add_action('wp_body_open', function(){
     if (!pettt_setting('announcement_enabled')) return;
-    $text = pettt_setting('announcement_text', '');
-    if (!$text) return;
+    $text = pettt_setting('announcement_text', ''); if (!$text) return;
     $bg = esc_attr(pettt_setting('announcement_bg', '#EEEAFE'));
     $color = esc_attr(pettt_setting('announcement_color', '#080A12'));
     $size = esc_attr(pettt_setting('announcement_size', '14'));
