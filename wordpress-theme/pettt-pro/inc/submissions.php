@@ -3,6 +3,7 @@ if (!defined('ABSPATH')) { exit; }
 
 function ninjapet_service_types(){ return ['پت‌شاپ','دامپزشکی','آرایشگر حیوانات','پانسیون']; }
 function ninjapet_pet_types(){ return ['سگ','گربه','پرنده','خرگوش','همه حیوانات']; }
+function ninjapet_status_label($status){ return ['pending'=>'در انتظار تأیید','publish'=>'تأیید شده','draft'=>'پیش‌نویس'][$status] ?? $status; }
 
 add_shortcode('ninjapet_submit_service', function(){
     if (!empty($_POST['ninjapet_submit_service']) && isset($_POST['ninjapet_service_nonce']) && wp_verify_nonce($_POST['ninjapet_service_nonce'], 'ninjapet_submit_service')) {
@@ -16,26 +17,9 @@ add_shortcode('ninjapet_submit_service', function(){
     }
     ob_start(); ?>
     <form class="np-submit-form" method="post">
-      <h2>ثبت مرکز در NinjaPet</h2>
-      <p>پت‌شاپ، دامپزشکی، آرایشگاه یا پانسیون خود را ثبت کنید تا بعد از تأیید مدیر در لیست نمایش داده شود.</p>
-      <?php wp_nonce_field('ninjapet_submit_service', 'ninjapet_service_nonce'); ?>
-      <input type="hidden" name="ninjapet_submit_service" value="1">
-      <label>نام مجموعه<input name="service_name" required></label>
-      <label>نوع مرکز<select name="service_type"><?php foreach(ninjapet_service_types() as $t) echo '<option>'.esc_html($t).'</option>'; ?></select></label>
-      <label>نام مسئول<input name="manager_name"></label>
-      <label>شماره تماس<input name="phone" required></label>
-      <label>واتساپ<input name="whatsapp"></label>
-      <label>اینستاگرام<input name="instagram" placeholder="@ninjapet"></label>
-      <label>استان<input name="province" required></label>
-      <label>شهر<input name="city" required></label>
-      <label>آدرس<input name="address"></label>
-      <label>ساعت کاری<input name="working_hours"></label>
-      <label>نوع حیوان قابل پذیرش<select name="pet_types"><?php foreach(ninjapet_pet_types() as $t) echo '<option>'.esc_html($t).'</option>'; ?></select></label>
-      <label>وب‌سایت یا لینک رزرو<input name="website"></label>
-      <label>لینک ویدئو<input name="video_url"></label>
-      <label class="wide">کد Google Map<textarea name="google_map_embed" placeholder="iframe گوگل مپ"></textarea></label>
-      <label class="wide">توضیحات<textarea name="description"></textarea></label>
-      <button class="pettt-primary">ارسال برای بررسی</button>
+      <h2>ثبت مرکز در NinjaPet</h2><p>پت‌شاپ، دامپزشکی، آرایشگاه یا پانسیون خود را ثبت کنید تا بعد از تأیید مدیر در لیست نمایش داده شود.</p>
+      <?php wp_nonce_field('ninjapet_submit_service', 'ninjapet_service_nonce'); ?><input type="hidden" name="ninjapet_submit_service" value="1">
+      <label>نام مجموعه<input name="service_name" required></label><label>نوع مرکز<select name="service_type"><?php foreach(ninjapet_service_types() as $t) echo '<option>'.esc_html($t).'</option>'; ?></select></label><label>نام مسئول<input name="manager_name"></label><label>شماره تماس<input name="phone" required></label><label>واتساپ<input name="whatsapp"></label><label>اینستاگرام<input name="instagram" placeholder="@ninjapet"></label><label>استان<input name="province" required></label><label>شهر<input name="city" required></label><label>آدرس<input name="address"></label><label>ساعت کاری<input name="working_hours"></label><label>نوع حیوان قابل پذیرش<select name="pet_types"><?php foreach(ninjapet_pet_types() as $t) echo '<option>'.esc_html($t).'</option>'; ?></select></label><label>وب‌سایت یا لینک رزرو<input name="website"></label><label>لینک ویدئو<input name="video_url"></label><label class="wide">کد Google Map<textarea name="google_map_embed" placeholder="iframe گوگل مپ"></textarea></label><label class="wide">توضیحات<textarea name="description"></textarea></label><button class="pettt-primary">ارسال برای بررسی</button>
     </form>
     <?php return ob_get_clean();
 });
@@ -44,16 +28,28 @@ add_shortcode('ninjapet_submit_explore', function(){
     if (!is_user_logged_in()) return do_shortcode('[ninjapet_login]');
     $msg='';
     if (!empty($_POST['ninjapet_submit_explore']) && isset($_POST['ninjapet_explore_nonce']) && wp_verify_nonce($_POST['ninjapet_explore_nonce'], 'ninjapet_submit_explore')) {
-        $id = wp_insert_post(['post_type'=>'pettt_explore','post_status'=>'pending','post_title'=>sanitize_text_field($_POST['post_title'] ?? 'پست جدید نینجا پت'),'post_content'=>wp_kses_post($_POST['caption'] ?? ''),'post_author'=>get_current_user_id()]);
-        if($id){ update_post_meta($id,'_pettt_pet_name',sanitize_text_field($_POST['pet_name'] ?? '')); update_post_meta($id,'_pettt_pet_breed',sanitize_text_field($_POST['pet_breed'] ?? '')); update_post_meta($id,'_pettt_pet_food',sanitize_text_field($_POST['pet_food'] ?? '')); $msg='<div class="np-success">پست شما ثبت شد و در انتظار تأیید مدیر است.</div>'; }
+        $post_id = absint($_POST['explore_id'] ?? 0);
+        $data = ['post_type'=>'pettt_explore','post_status'=>'pending','post_title'=>sanitize_text_field($_POST['post_title'] ?? 'پست جدید نینجا پت'),'post_content'=>wp_kses_post($_POST['caption'] ?? ''),'post_author'=>get_current_user_id()];
+        if($post_id){ $old=get_post($post_id); if($old && (int)$old->post_author===get_current_user_id()){ $data['ID']=$post_id; $id=wp_update_post($data); } else { $id=0; } } else { $id=wp_insert_post($data); }
+        if($id){ update_post_meta($id,'_pettt_pet_name',sanitize_text_field($_POST['pet_name'] ?? '')); update_post_meta($id,'_pettt_pet_breed',sanitize_text_field($_POST['pet_breed'] ?? '')); update_post_meta($id,'_pettt_pet_food',sanitize_text_field($_POST['pet_food'] ?? '')); $msg='<div class="np-success">پست شما ذخیره شد و در انتظار تأیید مدیر است.</div>'; }
     }
+    $edit_id = absint($_GET['np_edit_explore'] ?? 0); $edit = $edit_id ? get_post($edit_id) : null; if($edit && (int)$edit->post_author!==get_current_user_id()) $edit=null;
     ob_start(); echo $msg; ?>
     <form class="np-submit-form" method="post">
-      <h2>ارسال پست اکسپلور</h2><?php wp_nonce_field('ninjapet_submit_explore','ninjapet_explore_nonce'); ?><input type="hidden" name="ninjapet_submit_explore" value="1">
-      <label>عنوان پست<input name="post_title" required></label><label>اسم پت<input name="pet_name"></label><label>نژاد<input name="pet_breed"></label><label>غذای محبوب<input name="pet_food"></label><label class="wide">متن پست<textarea name="caption"></textarea></label><button class="pettt-primary">ارسال برای تأیید</button>
+      <h2><?php echo $edit ? 'ویرایش پست اکسپلور' : 'ارسال پست اکسپلور'; ?></h2><?php wp_nonce_field('ninjapet_submit_explore','ninjapet_explore_nonce'); ?><input type="hidden" name="ninjapet_submit_explore" value="1"><input type="hidden" name="explore_id" value="<?php echo esc_attr($edit ? $edit->ID : 0); ?>">
+      <label>عنوان پست<input name="post_title" required value="<?php echo esc_attr($edit ? $edit->post_title : ''); ?>"></label><label>اسم پت<input name="pet_name" value="<?php echo esc_attr($edit ? pettt_meta($edit->ID,'_pettt_pet_name') : ''); ?>"></label><label>نژاد<input name="pet_breed" value="<?php echo esc_attr($edit ? pettt_meta($edit->ID,'_pettt_pet_breed') : ''); ?>"></label><label>غذای محبوب<input name="pet_food" value="<?php echo esc_attr($edit ? pettt_meta($edit->ID,'_pettt_pet_food') : ''); ?>"></label><label class="wide">متن پست<textarea name="caption"><?php echo esc_textarea($edit ? $edit->post_content : ''); ?></textarea></label><button class="pettt-primary">ارسال برای تأیید</button>
     </form>
     <?php return ob_get_clean();
 });
+
+function ninjapet_user_explore_posts(){
+    if(!is_user_logged_in()) return '';
+    $q=new WP_Query(['post_type'=>'pettt_explore','author'=>get_current_user_id(),'post_status'=>['publish','pending','draft'],'posts_per_page'=>20]);
+    ob_start(); echo '<section class="pettt-account-card"><h2>پست‌های اکسپلور من</h2><div class="np-my-posts">';
+    if($q->have_posts()) while($q->have_posts()){ $q->the_post(); $id=get_the_ID(); echo '<article><div><strong>'.esc_html(get_the_title()).'</strong><span>'.esc_html(ninjapet_status_label(get_post_status())).'</span></div><a href="'.esc_url(add_query_arg('np_edit_explore',$id,home_url('/submit-explore'))).'">ویرایش</a><a class="danger" href="'.esc_url(wp_nonce_url(add_query_arg('np_delete_explore',$id),'np_delete_explore')).'">حذف</a></article>'; } else echo '<p>هنوز پستی ارسال نکرده‌اید.</p>';
+    wp_reset_postdata(); echo '</div></section>'; return ob_get_clean();
+}
+add_shortcode('ninjapet_my_explore_posts','ninjapet_user_explore_posts');
 
 add_action('template_redirect', function(){
     if(!is_user_logged_in()) return;
