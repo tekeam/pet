@@ -3,7 +3,7 @@ Theme Name: NinjaPet Pro
 Theme URI: https://ninjapet.ir
 Author: NinjaPet Team
 Description: NinjaPet Pro WordPress theme for pet food brands, pet centers, explore, profiles, SMS login, and data tools.
-Version: 1.2.1
+Version: 1.2.2
 Requires at least: 6.0
 Tested up to: 6.6
 Requires PHP: 8.0
@@ -16,3 +16,4 @@ Tags: rtl, woocommerce, elementor, pets, directory, marketplace
 @import url('assets/css/pro-ui.css');
 @import url('assets/css/ninjapet-fixes.css');
 @import url('assets/css/elementor-content-fix.css');
+@import url('assets/css/advisor-profile-fix.css');
