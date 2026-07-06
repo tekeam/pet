@@ -12,7 +12,7 @@ add_action('wp_head', function(){
     if ($font_url) echo '<style id="ninjapet-custom-font">@font-face{font-family:"'.esc_attr($font_family).'";src:url("'.$font_url.'") format("woff2");font-display:swap}:root{--np-font:"'.esc_attr($font_family).'", Vazirmatn, sans-serif}body,button,input,select,textarea{font-family:var(--np-font)}</style>';
     $accent = esc_attr(pettt_setting('accent_color', '#5B45F5'));
     $dark = esc_attr(pettt_setting('dark_color', '#080A12'));
-    echo '<style id="ninjapet-theme-vars">:root{--np-black:'.$dark.';--np-purple:'.$accent.';--np-soft:#EEEAFE;--np-pink:#F8B8C8;--np-mint:#A7D7C5;--np-bg:#FBFAFF;--np-text:#252733}</style>';
+    echo '<style id="ninjapet-theme-vars">:root{--np-black:'.$dark.';--np-purple:'.$accent.';--np-soft:#EEEAFE;--np-pink:#F8B8C8;--np-mint:#A7D7C5;--np-bg:#FBFAFF;--np-text:#252733}.np-logo img,.np-footer-brand img{height:54px;width:auto;max-width:190px;display:block}.np-footer-brand img{height:72px;margin:auto}.custom-logo-link img{max-height:58px;width:auto}.pettt-brand-card{overflow:hidden}.pettt-brand-card img{object-fit:contain!important;background:#fff;padding:18px;max-height:150px}</style>';
 }, 8);
 
 function ninjapet_logo_html($class='ninjapet-logo'){
