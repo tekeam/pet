@@ -8,24 +8,27 @@
 </head>
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
-<header class="pettt-header">
+<header class="pettt-header np-header">
   <div class="pettt-container pettt-header-inner">
-    <a class="pettt-logo" href="<?php echo esc_url(home_url('/')); ?>">
-      <?php if (has_custom_logo()) { the_custom_logo(); } else { echo '<span>Pettt</span>'; } ?>
-    </a>
-    <nav class="pettt-nav">
-      <?php wp_nav_menu(['theme_location'=>'primary','container'=>false,'fallback_cb'=>false]); ?>
-    </nav>
-    <div class="pettt-user-menu">
-      <a href="<?php echo esc_url(home_url('/pettt-account')); ?>" class="pettt-icon-btn">پروفایل پت</a>
-      <?php if (class_exists('WooCommerce')): ?>
-        <a href="<?php echo esc_url(wc_get_cart_url()); ?>" class="pettt-cart-btn">سبد خرید</a>
+    <div class="np-header-right">
+      <?php echo ninjapet_logo_html('pettt-logo np-logo'); ?>
+      <nav class="pettt-nav np-main-nav">
+        <?php wp_nav_menu(['theme_location'=>'primary','container'=>false,'fallback_cb'=>false]); ?>
+      </nav>
+    </div>
+    <div class="pettt-user-menu np-auth-links">
+      <?php if(is_user_logged_in()): $u = wp_get_current_user(); ?>
+        <a href="<?php echo esc_url(home_url('/pettt-account')); ?>" class="pettt-icon-btn">پروفایل <?php echo esc_html($u->display_name ?: 'من'); ?></a>
+        <a href="<?php echo esc_url(wp_logout_url(home_url('/'))); ?>" class="pettt-secondary">خروج</a>
+      <?php else: ?>
+        <a href="<?php echo esc_url(ninjapet_login_url()); ?>" class="pettt-icon-btn">ورود</a>
+        <a href="<?php echo esc_url(wp_registration_url()); ?>" class="pettt-primary">ثبت‌نام</a>
       <?php endif; ?>
     </div>
     <div class="pettt-mega">
-      <div class="pettt-mega-card"><h3>کاتالوگ غذا</h3><a href="<?php echo esc_url(get_post_type_archive_link('pettt_brand')); ?>">برندها</a><a href="<?php echo esc_url(get_post_type_archive_link('pettt_food')); ?>">مدل‌های غذا</a><a href="<?php echo esc_url(home_url('/shop')); ?>">فروشگاه</a></div>
-      <div class="pettt-mega-card"><h3>خدمات و آموزش</h3><a href="<?php echo esc_url(get_post_type_archive_link('pettt_service')); ?>">خدمات شهری</a><a href="<?php echo esc_url(get_post_type_archive_link('pettt_video')); ?>">ویدیوها</a><a href="<?php echo esc_url(home_url('/blog')); ?>">مقالات</a></div>
-      <div class="pettt-mega-card"><h3>اجتماع Pettt</h3><a href="<?php echo esc_url(get_post_type_archive_link('pettt_explore')); ?>">اکسپلور</a><a href="<?php echo esc_url(home_url('/pettt-account')); ?>">پروفایل من</a></div>
+      <div class="pettt-mega-card"><h3>غذا و برندها</h3><a href="<?php echo esc_url(get_post_type_archive_link('pettt_brand')); ?>">برندهای غذا</a><a href="<?php echo esc_url(get_post_type_archive_link('pettt_food')); ?>">مدل‌های غذا</a><a href="<?php echo esc_url(home_url('/pettt-account')); ?>">پیشنهاد غذای پت من</a></div>
+      <div class="pettt-mega-card"><h3>مراکز مرتبط با پت</h3><a href="<?php echo esc_url(get_post_type_archive_link('pettt_service')); ?>">پت‌شاپ، دامپزشکی، آرایشگر و پانسیون</a><a href="<?php echo esc_url(home_url('/submit-service')); ?>">ثبت مرکز شما</a><a href="<?php echo esc_url(get_post_type_archive_link('pettt_video')); ?>">ویدیوهای آموزشی</a></div>
+      <div class="pettt-mega-card"><h3>اجتماع NinjaPet</h3><a href="<?php echo esc_url(get_post_type_archive_link('pettt_explore')); ?>">اکسپلور پت‌ها</a><a href="<?php echo esc_url(home_url('/submit-explore')); ?>">ارسال پست اکسپلور</a><a href="<?php echo esc_url(home_url('/pettt-account')); ?>">پروفایل من</a></div>
     </div>
   </div>
 </header>
