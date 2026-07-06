@@ -1,8 +1,9 @@
 <?php
 if (!defined('ABSPATH')) { exit; }
 
-define('PETTT_PRO_VERSION', '1.2.0');
+define('PETTT_PRO_VERSION', '1.2.1');
 
+require_once get_template_directory() . '/inc/elementor-compat.php';
 require_once get_template_directory() . '/inc/seo.php';
 require_once get_template_directory() . '/inc/account.php';
 require_once get_template_directory() . '/inc/admin.php';
@@ -32,6 +33,7 @@ add_action('after_setup_theme', function () {
     add_theme_support('wc-product-gallery-lightbox');
     add_theme_support('wc-product-gallery-slider');
     add_theme_support('elementor');
+    add_theme_support('elementor-header-footer-builder');
     register_nav_menus(['primary'=>'منوی اصلی','footer'=>'منوی فوتر','mobile'=>'منوی موبایل']);
 });
 
