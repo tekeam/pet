@@ -8,13 +8,13 @@
 </head>
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
+<?php $ninjapet_header_done = function_exists('elementor_theme_do_location') && elementor_theme_do_location('header'); ?>
+<?php if (!$ninjapet_header_done) : ?>
 <header class="pettt-header np-header">
   <div class="pettt-container pettt-header-inner">
     <div class="np-header-right">
       <?php echo ninjapet_logo_html('pettt-logo np-logo'); ?>
-      <nav class="pettt-nav np-main-nav">
-        <?php wp_nav_menu(['theme_location'=>'primary','container'=>false,'fallback_cb'=>false]); ?>
-      </nav>
+      <nav class="pettt-nav np-main-nav"><?php wp_nav_menu(['theme_location'=>'primary','container'=>false,'fallback_cb'=>false]); ?></nav>
     </div>
     <div class="pettt-user-menu np-auth-links">
       <?php if(is_user_logged_in()): $u = wp_get_current_user(); ?>
@@ -32,4 +32,5 @@
     </div>
   </div>
 </header>
+<?php endif; ?>
 <main class="pettt-main">
