@@ -1,9 +1,13 @@
 <?php
 if (!defined('ABSPATH')) { exit; }
 
-define('PETTT_PRO_VERSION', '1.2.1');
+define('PETTT_PRO_VERSION', '1.2.2');
 
 require_once get_template_directory() . '/inc/elementor-compat.php';
+require_once get_template_directory() . '/inc/iran-locations.php';
+require_once get_template_directory() . '/inc/catalog-seed.php';
+require_once get_template_directory() . '/inc/food-advisor.php';
+require_once get_template_directory() . '/inc/setup-pages.php';
 require_once get_template_directory() . '/inc/seo.php';
 require_once get_template_directory() . '/inc/account.php';
 require_once get_template_directory() . '/inc/admin.php';
