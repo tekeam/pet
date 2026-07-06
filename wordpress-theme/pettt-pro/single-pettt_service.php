@@ -5,64 +5,13 @@ $address = pettt_meta(get_the_ID(), '_pettt_address', '');
 $city = pettt_meta(get_the_ID(), '_pettt_city', '');
 $province = pettt_meta(get_the_ID(), '_pettt_province', '');
 $instagram = pettt_meta(get_the_ID(), '_pettt_instagram', '');
+$whatsapp = pettt_meta(get_the_ID(), '_pettt_whatsapp', '');
+$pet_types = pettt_meta(get_the_ID(), '_pettt_pet_types', '');
 $website = pettt_meta(get_the_ID(), '_pettt_website', '');
 $hours = pettt_meta(get_the_ID(), '_pettt_working_hours', '');
 $video_url = pettt_meta(get_the_ID(), '_pettt_video_url', '');
 $video_embed = pettt_meta(get_the_ID(), '_pettt_video_embed', '');
 $map_embed = pettt_meta(get_the_ID(), '_pettt_google_map_embed', '');
 ?>
-<section class="pettt-service-hero">
-  <div class="pettt-container pettt-service-hero-grid">
-    <div>
-      <span class="pettt-kicker"><?php echo esc_html($city); ?>، <?php echo esc_html($province); ?></span>
-      <h1><?php the_title(); ?></h1>
-      <p><?php echo esc_html(wp_trim_words(get_the_excerpt(), 28)); ?></p>
-      <div class="pettt-service-cta-row">
-        <?php if($phone): ?><a class="pettt-primary" href="tel:<?php echo esc_attr(preg_replace('/\s+/', '', $phone)); ?>">تماس: <?php echo esc_html($phone); ?></a><?php endif; ?>
-        <?php if($instagram): ?><a class="pettt-secondary" href="<?php echo esc_url(pettt_service_instagram_url($instagram)); ?>" target="_blank" rel="noopener">اینستاگرام</a><?php endif; ?>
-        <?php if($website): ?><a class="pettt-secondary" href="<?php echo esc_url($website); ?>" target="_blank" rel="noopener">وب‌سایت / رزرو</a><?php endif; ?>
-      </div>
-    </div>
-    <div class="pettt-service-cover"><?php if(has_post_thumbnail()) the_post_thumbnail('pettt-hero'); ?></div>
-  </div>
-</section>
-
-<section class="pettt-container pettt-service-page pro">
-  <div class="pettt-service-main-grid">
-    <article class="pettt-service-single pro-card">
-      <h2>معرفی</h2>
-      <div class="pettt-entry-text"><?php the_content(); ?></div>
-      <div class="pettt-service-info-grid">
-        <?php if($address): ?><div><b>آدرس</b><span><?php echo esc_html($address); ?></span></div><?php endif; ?>
-        <?php if($phone): ?><div><b>شماره تماس</b><span><?php echo esc_html($phone); ?></span></div><?php endif; ?>
-        <?php if($hours): ?><div><b>ساعت کاری</b><span><?php echo esc_html($hours); ?></span></div><?php endif; ?>
-        <?php if($instagram): ?><div><b>پیج اینستاگرام</b><a href="<?php echo esc_url(pettt_service_instagram_url($instagram)); ?>" target="_blank" rel="noopener"><?php echo esc_html($instagram); ?></a></div><?php endif; ?>
-      </div>
-    </article>
-
-    <aside class="pettt-service-side pro-card">
-      <h2>اطلاعات سریع</h2>
-      <p><b>استان:</b> <?php echo esc_html($province ?: 'ثبت نشده'); ?></p>
-      <p><b>شهر:</b> <?php echo esc_html($city ?: 'ثبت نشده'); ?></p>
-      <p><b>تماس:</b> <?php echo esc_html($phone ?: 'ثبت نشده'); ?></p>
-      <?php if($address): ?><p><b>آدرس:</b> <?php echo esc_html($address); ?></p><?php endif; ?>
-    </aside>
-  </div>
-
-  <?php if($video_embed || $video_url): ?>
-    <section class="pettt-service-media pro-card">
-      <div class="pettt-section-head"><h2>ویدئوی معرفی</h2></div>
-      <div class="pettt-service-video">
-        <?php if($video_embed): echo pettt_service_allowed_embed($video_embed); else: ?><video controls src="<?php echo esc_url($video_url); ?>"></video><?php endif; ?>
-      </div>
-    </section>
-  <?php endif; ?>
-
-  <?php if($map_embed): ?>
-    <section class="pettt-service-map pro-card">
-      <div class="pettt-section-head"><h2>لوکیشن روی نقشه</h2></div>
-      <div class="pettt-map-frame"><?php echo pettt_service_allowed_embed($map_embed); ?></div>
-    </section>
-  <?php endif; ?>
-</section>
-<?php get_footer(); ?>
+<section class="pettt-service-hero"><div class="pettt-container pettt-service-hero-grid"><div><span class="pettt-kicker"><?php echo esc_html($city); ?>، <?php echo esc_html($province); ?></span><h1><?php the_title(); ?></h1><p><?php echo esc_html(wp_trim_words(get_the_excerpt(), 28)); ?></p><div class="pettt-service-cta-row"><?php if($phone): ?><a class="pettt-primary" href="tel:<?php echo esc_attr(preg_replace('/\s+/', '', $phone)); ?>">تماس: <?php echo esc_html($phone); ?></a><?php endif; ?><?php if($instagram): ?><a class="pettt-secondary" href="<?php echo esc_url(pettt_service_instagram_url($instagram)); ?>" target="_blank" rel="noopener">اینستاگرام</a><?php endif; ?><?php if($website): ?><a class="pettt-secondary" href="<?php echo esc_url($website); ?>" target="_blank" rel="noopener">وب‌سایت / رزرو</a><?php endif; ?></div></div><div class="pettt-service-cover"><?php if(has_post_thumbnail()) the_post_thumbnail('pettt-hero'); ?></div></div></section>
+<section class="pettt-container pettt-service-page pro"><div class="pettt-service-main-grid"><article class="pettt-service-single pro-card"><h2>معرفی</h2><div class="pettt-entry-text"><?php the_content(); ?></div><div class="pettt-service-info-grid"><?php if($address): ?><div><b>آدرس</b><span><?php echo esc_html($address); ?></span></div><?php endif; ?><?php if($phone): ?><div><b>شماره تماس</b><span><?php echo esc_html($phone); ?></span></div><?php endif; ?><?php if($whatsapp): ?><div><b>واتساپ</b><span><?php echo esc_html($whatsapp); ?></span></div><?php endif; ?><?php if($hours): ?><div><b>ساعت کاری</b><span><?php echo esc_html($hours); ?></span></div><?php endif; ?><?php if($pet_types): ?><div><b>نوع حیوان قابل پذیرش</b><span><?php echo esc_html($pet_types); ?></span></div><?php endif; ?><?php if($instagram): ?><div><b>پیج اینستاگرام</b><a href="<?php echo esc_url(pettt_service_instagram_url($instagram)); ?>" target="_blank" rel="noopener"><?php echo esc_html($instagram); ?></a></div><?php endif; ?></div></article><aside class="pettt-service-side pro-card"><h2>اطلاعات سریع</h2><p><b>استان:</b> <?php echo esc_html($province ?: 'ثبت نشده'); ?></p><p><b>شهر:</b> <?php echo esc_html($city ?: 'ثبت نشده'); ?></p><p><b>تماس:</b> <?php echo esc_html($phone ?: 'ثبت نشده'); ?></p><?php if($pet_types): ?><p><b>پذیرش:</b> <?php echo esc_html($pet_types); ?></p><?php endif; ?><?php if($address): ?><p><b>آدرس:</b> <?php echo esc_html($address); ?></p><?php endif; ?></aside></div><?php if($video_embed || $video_url): ?><section class="pettt-service-media pro-card"><div class="pettt-section-head"><h2>ویدئوی معرفی</h2></div><div class="pettt-service-video"><?php if($video_embed): echo pettt_service_allowed_embed($video_embed); else: ?><video controls src="<?php echo esc_url($video_url); ?>"></video><?php endif; ?></div></section><?php endif; ?><?php if($map_embed): ?><section class="pettt-service-map pro-card"><div class="pettt-section-head"><h2>لوکیشن روی نقشه</h2></div><div class="pettt-map-frame"><?php echo pettt_service_allowed_embed($map_embed); ?></div></section><?php endif; ?></section><?php get_footer(); ?>
