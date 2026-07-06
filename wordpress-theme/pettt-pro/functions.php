@@ -1,7 +1,7 @@
 <?php
 if (!defined('ABSPATH')) { exit; }
 
-define('PETTT_PRO_VERSION', '1.1.1');
+define('PETTT_PRO_VERSION', '1.2.0');
 
 require_once get_template_directory() . '/inc/seo.php';
 require_once get_template_directory() . '/inc/account.php';
@@ -13,12 +13,16 @@ require_once get_template_directory() . '/inc/performance.php';
 require_once get_template_directory() . '/inc/explore.php';
 require_once get_template_directory() . '/inc/woocommerce-ux.php';
 require_once get_template_directory() . '/inc/service-details.php';
+require_once get_template_directory() . '/inc/brand-system.php';
+require_once get_template_directory() . '/inc/smsir-compat.php';
+require_once get_template_directory() . '/inc/data-tools.php';
+require_once get_template_directory() . '/inc/submissions.php';
 
 function pettt_meta($id, $key, $default='') { $v = get_post_meta($id, $key, true); return $v ? $v : $default; }
 function pettt_query($type, $count=6) { return new WP_Query(['post_type'=>$type, 'posts_per_page'=>$count, 'post_status'=>'publish']); }
 
 add_action('after_setup_theme', function () {
-    load_theme_textdomain('pettt-pro', get_template_directory() . '/languages');
+    load_theme_textdomain('ninjapet-pro', get_template_directory() . '/languages');
     add_theme_support('title-tag');
     add_theme_support('post-thumbnails');
     add_theme_support('custom-logo');
@@ -33,6 +37,7 @@ add_action('after_setup_theme', function () {
 
 add_action('wp_enqueue_scripts', function () {
     wp_enqueue_style('pettt-pro-font', 'https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap', [], null);
+    wp_enqueue_style('ninjapet-icons', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css', [], '6.5.2');
     wp_enqueue_style('pettt-pro-style', get_stylesheet_uri(), [], PETTT_PRO_VERSION);
     wp_enqueue_script('pettt-pro-main', get_template_directory_uri() . '/assets/js/theme.js', ['jquery'], PETTT_PRO_VERSION, true);
 });
@@ -41,9 +46,10 @@ add_action('init', function () {
     pettt_register_cpt('pettt_brand', 'برندها', 'برند', 'dashicons-awards', ['title','editor','thumbnail','excerpt']);
     pettt_register_cpt('pettt_food', 'مدل‌های غذا', 'مدل غذا', 'dashicons-carrot', ['title','editor','thumbnail','excerpt']);
     pettt_register_cpt('pettt_video', 'ویدیوهای آموزشی', 'ویدیو', 'dashicons-video-alt3', ['title','editor','thumbnail','excerpt']);
-    pettt_register_cpt('pettt_service', 'خدمات شهری', 'خدمت', 'dashicons-location-alt', ['title','editor','thumbnail','excerpt']);
-    register_taxonomy('pettt_service_type', ['pettt_service'], ['label'=>'نوع خدمت','public'=>true,'show_admin_column'=>true,'hierarchical'=>true,'rewrite'=>['slug'=>'service-type'],'show_in_rest'=>true]);
+    pettt_register_cpt('pettt_service', 'مراکز مرتبط با پت', 'مرکز پت', 'dashicons-location-alt', ['title','editor','thumbnail','excerpt']);
+    register_taxonomy('pettt_service_type', ['pettt_service'], ['label'=>'نوع مرکز','public'=>true,'show_admin_column'=>true,'hierarchical'=>true,'rewrite'=>['slug'=>'service-type'],'show_in_rest'=>true]);
     register_taxonomy('pettt_food_problem', ['pettt_food'], ['label'=>'مشکل یا نیاز پت','public'=>true,'show_admin_column'=>true,'hierarchical'=>true,'rewrite'=>['slug'=>'food-problem'],'show_in_rest'=>true]);
+    foreach(['پت‌شاپ','دامپزشکی','آرایشگر حیوانات','پانسیون'] as $term){ if(!term_exists($term,'pettt_service_type')) wp_insert_term($term,'pettt_service_type'); }
 });
 
 function pettt_register_cpt($type, $plural, $single, $icon, $supports) {
@@ -54,7 +60,7 @@ add_action('add_meta_boxes', function () {
     add_meta_box('pettt_brand_fields', 'اطلاعات برند', 'pettt_brand_fields_cb', 'pettt_brand', 'normal', 'high');
     add_meta_box('pettt_food_fields', 'اطلاعات غذا و خرید', 'pettt_food_fields_cb', 'pettt_food', 'normal', 'high');
     add_meta_box('pettt_video_fields', 'اطلاعات ویدیو', 'pettt_video_fields_cb', 'pettt_video', 'normal', 'high');
-    add_meta_box('pettt_service_fields', 'اطلاعات خدمت شهری', 'pettt_service_fields_cb', 'pettt_service', 'normal', 'high');
+    add_meta_box('pettt_service_fields', 'اطلاعات اصلی مرکز', 'pettt_service_fields_cb', 'pettt_service', 'normal', 'high');
 });
 
 function pettt_field($id, $label, $type='text', $placeholder='') { $value = esc_attr(get_post_meta(get_the_ID(), $id, true)); echo '<p><label style="font-weight:700;display:block;margin-bottom:6px">'.esc_html($label).'</label><input style="width:100%;padding:10px" type="'.esc_attr($type).'" name="'.esc_attr($id).'" value="'.$value.'" placeholder="'.esc_attr($placeholder).'"></p>'; }
@@ -76,11 +82,6 @@ add_action('widgets_init', function () {
     register_sidebar(['name'=>'فوتر ۲','id'=>'footer-2','before_widget'=>'<div class="footer-widget">','after_widget'=>'</div>']);
 });
 
-add_action('customize_register', function($wp_customize){
-    $wp_customize->add_section('pettt_home', ['title'=>'تنظیمات صفحه اصلی Pettt']);
-    foreach (['hero_title'=>'عنوان پوستر اصلی','hero_text'=>'متن پوستر اصلی','contact_phone'=>'شماره تماس','contact_email'=>'ایمیل تماس'] as $id=>$label) { $wp_customize->add_setting($id, ['default'=>'','sanitize_callback'=>'sanitize_text_field']); $wp_customize->add_control($id, ['label'=>$label,'section'=>'pettt_home','type'=>'text']); }
-});
-
 add_action('pre_get_posts', function($query){
     if (is_admin() || !$query->is_main_query()) return;
     if ($query->is_search()) $query->set('post_type', ['post','product','pettt_brand','pettt_food','pettt_video','pettt_service','pettt_explore']);
@@ -92,5 +93,5 @@ add_action('pre_get_posts', function($query){
     }
 });
 
-add_action('woocommerce_before_shop_loop_item_title', function(){ echo '<div class="pettt-product-badge">Pettt Shop</div>'; }, 5);
+add_action('woocommerce_before_shop_loop_item_title', function(){ echo '<div class="pettt-product-badge">NinjaPet</div>'; }, 5);
 add_filter('body_class', function($classes){ if (class_exists('WooCommerce') && (is_shop() || is_product_taxonomy() || is_product())) $classes[] = 'pettt-woocommerce-page'; return $classes; });
